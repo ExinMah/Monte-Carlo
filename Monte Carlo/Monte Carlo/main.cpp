@@ -5,8 +5,7 @@
 using namespace std;
 
 // Function to perform Monte Carlo simulations
-vector<double> performSimulations(double initialInvestment, double expectedReturn,
-    double volatility, int numSimulations, int investmentPeriod) {
+vector<double> performSimulations(double initialInvestment, double expectedReturn, double volatility, int numSimulations, int investmentPeriod) {
     random_device rd;
     mt19937 gen(rd());
     normal_distribution<double> dis(0.0, 1.0);
@@ -30,8 +29,7 @@ vector<double> performSimulations(double initialInvestment, double expectedRetur
 }
 
 // Function to calculate risk metrics
-void calculateRiskMetrics(const vector<double>& finalReturns, double& averageReturn,
-    double& standardDeviation, double& minReturn, double& maxReturn) {
+void calculateRiskMetrics(const vector<double>& finalReturns, double& averageReturn, double& standardDeviation, double& minReturn, double& maxReturn) {
     double totalReturns = 0.0;
     minReturn = finalReturns[0];
     maxReturn = finalReturns[0];
@@ -58,9 +56,7 @@ void calculateRiskMetrics(const vector<double>& finalReturns, double& averageRet
 }
 
 // Function to display the results
-void displayResults(double initialInvestment, double expectedReturn, double volatility,
-    int investmentPeriod, int numSimulations, double averageReturn,
-    double standardDeviation, double minReturn, double maxReturn, double elapsedTime) {
+void displayResults(double initialInvestment, double expectedReturn, double volatility, int investmentPeriod, int numSimulations, double averageReturn, double standardDeviation, double minReturn, double maxReturn, double elapsedTime) {
     cout << "Risk Assessment Results:" << endl;
     cout << "------------------------" << endl;
     cout << "Initial Investment: $" << initialInvestment << endl;
@@ -80,14 +76,13 @@ int main() {
     double initialInvestment = 10000.0;
     double expectedReturn = 0.08;
     double volatility = 0.15;
-    int numSimulations = 10000;
+    int numSimulations = 1000000;
     int investmentPeriod = 5;
 
     // Start the timer
     auto startTime = chrono::steady_clock::now();
 
-    vector<double> finalReturns = performSimulations(initialInvestment, expectedReturn,
-        volatility, numSimulations, investmentPeriod);
+    vector<double> finalReturns = performSimulations(initialInvestment, expectedReturn, volatility, numSimulations, investmentPeriod);
 
     double averageReturn, standardDeviation, minReturn, maxReturn;
     calculateRiskMetrics(finalReturns, averageReturn, standardDeviation, minReturn, maxReturn);
@@ -96,8 +91,7 @@ int main() {
     auto endTime = chrono::steady_clock::now();
     double elapsedTime = chrono::duration<double>(endTime - startTime).count();
 
-    displayResults(initialInvestment, expectedReturn, volatility, investmentPeriod, numSimulations,
-        averageReturn, standardDeviation, minReturn, maxReturn, elapsedTime);
+    displayResults(initialInvestment, expectedReturn, volatility, investmentPeriod, numSimulations, averageReturn, standardDeviation, minReturn, maxReturn, elapsedTime);
 
     return 0;
 }
