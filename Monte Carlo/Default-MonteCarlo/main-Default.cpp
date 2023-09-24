@@ -108,7 +108,7 @@ int main() {
     int investmentPeriod = 5;
     double lowerBound = 0.0;
     double upperBound = 1.0;
-    int numSamples = 1000000;
+    int numSamples = numSimulations;
 
     auto startTime = steady_clock::now();
 

@@ -153,7 +153,7 @@ int main(int argc, char** argv) {
     int investmentPeriod = 5;
     double lowerBound = 0.0;
     double upperBound = 1.0;
-    int numSamples = 1000000;
+    int numSamples = numSimulations;
 
     double startTime = MPI_Wtime();
 
