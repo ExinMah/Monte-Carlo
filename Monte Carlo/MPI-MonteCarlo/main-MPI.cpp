@@ -1,3 +1,5 @@
+// mpiexec -n 8
+
 #include <iostream>
 #include <random>
 #include <vector>
@@ -133,6 +135,7 @@ void displayResults(double initialInvestment, double expectedReturn, double vola
     cout << "Maximum Return: " << (maxReturn * 100.0) << "%" << endl;
     cout << "Monte Carlo Integration Result: " << integrationResult << endl;
     cout << "Elapsed Time: " << elapsedTime << " seconds" << endl;
+    cout << "------------------------" << endl;
 }
 
 int main(int argc, char** argv) {

@@ -29,7 +29,7 @@ double monteCarloIntegration(double (*function)(double), double lowerBound, doub
     {
         int threadId = omp_get_thread_num();
         mt19937 generator_local(rd());  // Create a local RNG for each thread
-        double threadStartTime = omp_get_wtime(); // Measure thread start time
+        //double threadStartTime = omp_get_wtime(); // Measure thread start time
 
 #pragma omp for
         for (int i = 0; i < numSamples; ++i) {
@@ -38,8 +38,8 @@ double monteCarloIntegration(double (*function)(double), double lowerBound, doub
             sum += result;
         }
 
-        double threadEndTime = omp_get_wtime(); // Measure thread end time
-        cout << "Thread " << threadId << " took " << (threadEndTime - threadStartTime) << " seconds." << endl;
+        //double threadEndTime = omp_get_wtime(); // Measure thread end time
+        //cout << "Thread " << threadId << " took " << (threadEndTime - threadStartTime) << " seconds." << endl;
     }
 
     double intervalLength = upperBound - lowerBound;
@@ -60,7 +60,7 @@ vector<double> performSimulations(double initialInvestment, double expectedRetur
         int threadId = omp_get_thread_num();
         int numSimulationsPerThread = numSimulations / NUM_THREADS;
         int startSimulation = threadId * numSimulationsPerThread;
-        int endSimulation = (threadId == 3) ? numSimulations : startSimulation + numSimulationsPerThread;
+        int endSimulation = (threadId == NUM_THREADS - 1) ? numSimulations : startSimulation + numSimulationsPerThread;
 
         mt19937 gen_local(rd());  // Create a local RNG for each thread
 
@@ -178,22 +178,25 @@ void performRiskAssessment(const vector<double>& finalReturns, int numThreads, d
 // Each thread displays its own results
 #pragma omp critical
         {
-            // Display Risk Assessment Results for each thread
-            cout << endl << "Thread " << threadId << " Risk Assessment Results:" << endl;
-            cout << "------------------------" << endl;
-            cout << "Initial Investment: $" << initialInvestment << endl;
-            cout << "Expected Annual Return: " << (expectedReturn * 100.0) << "%" << endl;
-            cout << "Volatility (Annual Standard Deviation): " << (volatility * 100.0) << "%" << endl;
-            cout << "Investment Period: " << investmentPeriod << " years" << endl;
-            cout << "Number of Simulations: " << numSimulations << endl;
-            cout << "------------------------" << endl;
-            cout << "Average Return: " << (averageReturn * 100.0) << "%" << endl;
-            cout << "Standard Deviation of Returns: " << (standardDeviation * 100.0) << "%" << endl;
-            cout << "Minimum Return: " << (minReturn * 100.0) << "%" << endl;
-            cout << "Maximum Return: " << (maxReturn * 100.0) << "%" << endl;
-            cout << "Monte Carlo Integration Result: " << integrationResult << endl;
-            cout << "Elapsed Time for Thread " << threadId << ": " << (threadEndTime - threadStartTime) << " seconds" << endl;
-            cout << "------------------------" << endl;
+            // Display Risk Assessment Results for one thread
+            if (threadId == 0)
+            {
+                cout << "Risk Assessment Results : " << endl;
+                cout << "------------------------" << endl;
+                cout << "Initial Investment: $" << initialInvestment << endl;
+                cout << "Expected Annual Return: " << (expectedReturn * 100.0) << "%" << endl;
+                cout << "Volatility (Annual Standard Deviation): " << (volatility * 100.0) << "%" << endl;
+                cout << "Investment Period: " << investmentPeriod << " years" << endl;
+                cout << "Number of Simulations: " << numSimulations << endl;
+                cout << "------------------------" << endl;
+                cout << "Average Return: " << (averageReturn * 100.0) << "%" << endl;
+                cout << "Standard Deviation of Returns: " << (standardDeviation * 100.0) << "%" << endl;
+                cout << "Minimum Return: " << (minReturn * 100.0) << "%" << endl;
+                cout << "Maximum Return: " << (maxReturn * 100.0) << "%" << endl;
+                cout << "Monte Carlo Integration Result: " << integrationResult << endl;
+                cout << "Elapsed Time: " << elapsedTime << " seconds" << endl;
+                cout << "------------------------" << endl;
+            }
         }
     }
 }
