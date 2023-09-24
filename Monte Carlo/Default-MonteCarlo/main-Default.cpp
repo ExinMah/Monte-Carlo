@@ -122,5 +122,7 @@ int main() {
 
     displayResults(initialInvestment, expectedReturn, volatility, investmentPeriod, numSimulations, averageReturn, standardDeviation, minReturn, maxReturn, integrationResult, elapsedTime);
 
+    system("pause");
+
     return 0;
 }
