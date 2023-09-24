@@ -193,25 +193,6 @@ int main(int argc, char** argv) {
     MPI_Gather(&maxReturn, 1, MPI_DOUBLE, maxReturns, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Gather(&integrationResult, 1, MPI_DOUBLE, integrationResults, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-    /*vector<double> computeSimulations;
-    if (worldRank == 0) {
-        computeSimulations.resize(numSimulations);
-        assert(!computeSimulations.empty());
-    }
-
-    MPI_Gather(computeSimulation.data(), numSimulationsPerProcess, MPI_FLOAT, computeSimulations.data(), numSimulationsPerProcess, MPI_FLOAT, 0, MPI_COMM_WORLD);*/
-
-
-    // START = BACKUP - IGNORE HERE //
-    // auto startTime = steady_clock::now();
-
-    // finalReturns = performSimulations(initialInvestment, expectedReturn, volatility, numSimulations, investmentPeriod);
-    
-
-    // auto endTime = steady_clock::now();
-    // double elapsedTime = duration<double>(endTime - startTime).count();
-    // END = BACKUP - IGNORE HERE //
-
     if (worldRank == 0)
     {
         double finalAverageReturn = computeSumData(averageReturns, numProcesses);
