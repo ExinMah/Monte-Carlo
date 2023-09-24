@@ -230,11 +230,11 @@ int main(int argc, char** argv) {
         free(minReturns);
         free(maxReturns);
         free(integrationResults);
+
+        system("pause");
     }
 
     MPI_Finalize();
-
-    system("pause");
 
     return 0;
 }
