@@ -152,8 +152,8 @@ int main() {
     cudaMalloc((void**)&d_returns, numSimulations * sizeof(double));
     cudaMalloc((void**)&d_integral, numSimulations * sizeof(double));
 
-    double* integralResult;
-    cudaMalloc((void**)&integralResult, sizeof(double));
+    double* integralResult = new double[numThreads];
+    cudaMalloc((void**)&integralResult, numThreads *  sizeof(double));
 
     // Set up CUDA events for timing
     cudaEvent_t start, stop;
@@ -179,7 +179,7 @@ int main() {
 
         // Launch Monte Carlo integration kernel on the device (GPU) using the current stream
         monteCarloIntegrationKernel << < 1, 256, 0, streams[i] >> > (d_integral + i * numSimulations / numThreads,
-            lowerBound, upperBound, numSimulations / numThreads, seed + i, integralResult);
+            lowerBound, upperBound, numSimulations / numThreads, seed + i, &integralResult[i]);
     }
 
     // Synchronize all CUDA streams before copying results back to the host
@@ -193,11 +193,15 @@ int main() {
     //double totalSum;
     //cudaMemcpy(&totalSum, integralResult, sizeof(double), cudaMemcpyDeviceToHost);
     //double avgIntegral = (totalSum / numSimulations) * (upperBound - lowerBound);
+    //double* totalSum = new double[numThreads];
+    //cudaMemcpy(totalSum, integralResult, numThreads * sizeof(double), cudaMemcpyDeviceToHost);
+
     double* totalSum = new double[numThreads];
+    cudaMemcpy(totalSum, integralResult, numThreads * sizeof(double), cudaMemcpyDeviceToHost);
+
     double avgIntegral = 0;
     for (int i = 0; i < numThreads; i++)
     {
-        cudaMemcpy(&totalSum[i], integralResult, sizeof(double), cudaMemcpyDeviceToHost);
         avgIntegral += totalSum[i];
     }
 
@@ -226,6 +230,8 @@ int main() {
     cudaEventDestroy(stop);
     cudaFree(d_returns);
     cudaFree(d_integral);
+    cudaFree(integralResult);
+
     delete[] returns;
     delete[] streams;
     delete[] totalSum;
