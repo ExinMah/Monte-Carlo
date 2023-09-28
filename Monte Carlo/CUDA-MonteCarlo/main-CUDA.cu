@@ -190,9 +190,18 @@ int main() {
     // Copy results from device to host
     cudaMemcpy(returns, d_returns, numSimulations * sizeof(double), cudaMemcpyDeviceToHost);
     //cudaMemcpy(integral, d_integral, numSimulations * sizeof(double), cudaMemcpyDeviceToHost);
-    double totalSum;
-    cudaMemcpy(&totalSum, integralResult, sizeof(double), cudaMemcpyDeviceToHost);
-    double avgIntegral = (totalSum / numSimulations) * (upperBound - lowerBound);
+    //double totalSum;
+    //cudaMemcpy(&totalSum, integralResult, sizeof(double), cudaMemcpyDeviceToHost);
+    //double avgIntegral = (totalSum / numSimulations) * (upperBound - lowerBound);
+    double* totalSum = new double[numThreads];
+    double avgIntegral = 0;
+    for (int i = 0; i < numThreads; i++)
+    {
+        cudaMemcpy(&totalSum[i], integralResult, sizeof(double), cudaMemcpyDeviceToHost);
+        avgIntegral += totalSum[i];
+    }
+
+    avgIntegral /= numSimulations * (upperBound - lowerBound);
 
     // Calculate risk metrics on the host (CPU)
     double averageReturn, standardDeviation, minReturn, maxReturn;
@@ -216,8 +225,10 @@ int main() {
     cudaEventDestroy(start);
     cudaEventDestroy(stop);
     cudaFree(d_returns);
+    cudaFree(d_integral);
     delete[] returns;
     delete[] streams;
+    delete[] totalSum;
 
     system("pause");
 
